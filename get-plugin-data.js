@@ -2,6 +2,7 @@ const fs = require( 'fs' );
 const request = require( 'request-promise-native' );
 
 async function getPluginData() {
+
 	const plugins = [];
 	const url = 'https://api.wordpress.org/plugins/info/1.2/?action=query_plugins&request[browse]=popular&request[per_page]=250';
 	let currentId = 0;
@@ -29,9 +30,14 @@ async function getPluginData() {
 	} while( currentPage < totalPages );
 
 	console.log( 'Writing output file...' );
+
+	if ( !fs.existsSync( './data' ) ) {
+		fs.mkdirSync( './data' );
+	}//end if
 	fs.writeFileSync('./data/plugins.json', JSON.stringify( plugins ) );
+
 	console.log( 'Done!' );
 
-}
+}//end getPluginData()
 
 getPluginData();
